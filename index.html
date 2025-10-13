@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>更好的自己養成器</title>
+    <!-- 使用 CDN 版本的框架 -->
+    <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chai/chai.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mocha/mocha.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mocha/mocha.css" />
+    <!-- 自定義樣式 -->
+    <link rel="stylesheet" href="src/styles/main.css">
+</head>
+<body>
+    <!-- 測試區域 -->
+    <div id="mocha" style="display: none;"></div>
+
+    <!-- 應用程式主體 -->
+    <div id="app">
+        <header>
+            <h1>更好的自己養成器</h1>
+            <p>設定目標，讓自己更好！</p>
+        </header>
+        
+        <main>
+            <section id="goal-setting">
+                <!-- 目標設定區域 -->
+            </section>
+        </main>
+    </div>
+
+    <!-- 測試設定 -->
+    <script>
+        mocha.setup('bdd');
+        var assert = chai.assert;
+    </script>
+
+    <!-- 應用程式邏輯 -->
+    <script src="src/js/app.js" type="module"></script>
+    <script src="src/js/goals.js" type="module"></script>
+    <script src="src/js/plans.js" type="module"></script>
+
+    <!-- 測試檔案 -->
+    <script src="tests/goals.test.js" type="module"></script>
+    <script src="tests/plans.test.js" type="module"></script>
+    
+    <!-- 執行測試 -->
+    <script>
+        // 只在開發環境執行測試
+        if (location.hash === '#test') {
+            document.getElementById('mocha').style.display = 'block';
+            mocha.run();
+        }
+    </script>
+</body>
+</html>
