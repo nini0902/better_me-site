@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>進度追蹤 - Better Me</title>
+    <link rel="stylesheet" href="../../src/styles/main.css">
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1>進度追蹤</h1>
+            <p class="subtitle">看見每一步的進步</p>
+        </div>
+        <nav>
+            <a href="../../index.html">首頁</a>
+            <a href="../goals/list.html">目標列表</a>
+            <a href="../goals/create.html">新增目標</a>
+            <a href="track.html" class="active">進度追蹤</a>
+        </nav>
+        <main>
+            <div id="progressChart"></div>
+            <div id="achievementList"></div>
+        </main>
+    </div>
+    <script src="../../src/js/plans.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+</body>
+</html>
