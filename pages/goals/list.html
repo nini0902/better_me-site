@@ -1,29 +1,365 @@
+<!-- =====================
+File: pages/goals/list.html
+===================== -->
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>目標列表 - Better Me</title>
-    <link rel="stylesheet" href="../../src/styles/main.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>目標列表 - Better Me</title>
+  <link rel="stylesheet" href="../../src/styles/main.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    @media(max-width:992px){.cards{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:640px){.cards{grid-template-columns:1fr}}
+    .card{border:1px solid var(--border,#334155);background:#0b1020;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px}
+    .muted{color:#94a3b8}
+    .badge{font-size:12px;border:1px solid var(--border,#334155);border-radius:999px;padding:2px 8px;display:inline-block;color:#94a3b8}
+    .row{display:flex;gap:8px;align-items:center;justify-content:space-between}
+    .btn{border:1px solid var(--border,#334155);background:#0b1020;color:#e5e7eb;padding:8px 10px;border-radius:10px;cursor:pointer}
+    .btn.primary{background:linear-gradient(90deg,#38bdf8,#22c55e);border:0}
+    .progress{height:10px;background:#0b1020;border:1px solid var(--border,#334155);border-radius:999px;overflow:hidden}
+    .bar{height:100%;width:0;background:linear-gradient(90deg,#38bdf8,#22c55e)}
+    .toolbar{display:flex;gap:8px;align-items:center;margin:8px 0}
+    .toolbar input{padding:8px 10px;border-radius:10px;border:1px solid var(--border,#334155);background:#0b1020;color:#e5e7eb}
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="page-header">
-            <h1>我的目標</h1>
-            <p class="subtitle">追蹤你的成長歷程</p>
-        </div>
-        <nav>
-            <a href="../../index.html">首頁</a>
-            <a href="list.html" class="active">目標列表</a>
-            <a href="create.html">新增目標</a>
-            <a href="../progress/track.html">進度追蹤</a>
-        </nav>
-        <main>
-            <div id="goalFilters"></div>
-            <div id="goalList"></div>
-        </main>
+  <div class="container">
+    <div class="page-header">
+      <h1>目標列表</h1>
+      <p class="subtitle">查看、搜尋與管理你的目標</p>
     </div>
-    <script src="../../src/js/goals.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+
+    <nav>
+      <a href="../../index.html">首頁</a>
+      <a href="list.html" class="active">目標列表</a>
+      <a href="create.html">新增目標</a>
+      <a href="../progress/track.html">進度追蹤</a>
+    </nav>
+
+    <main>
+      <div class="toolbar">
+        <input id="q" placeholder="搜尋：標題/類別/標籤"/>
+        <button class="btn" id="exportAll">匯出所有目標</button>
+        <button class="btn" id="clearAll">清除所有（小心）</button>
+      </div>
+      <div id="grid" class="cards"></div>
+      <p id="empty" class="muted" style="display:none">尚無目標，請先前往「新增目標」。</p>
+    </main>
+  </div>
+  <script src="../../src/js/list.js"></script>
 </body>
 </html>
+
+<!-- =====================
+File: pages/progress/track.html
+===================== -->
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>進度追蹤 - Better Me</title>
+  <link rel="stylesheet" href="../../src/styles/main.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    .list{display:grid;gap:8px}
+    .task{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;border:1px solid var(--border,#334155);background:#0b1020;border-radius:12px;padding:10px}
+    .task.done{opacity:.6}
+    .muted{color:#94a3b8}
+    .badge{font-size:12px;border:1px solid var(--border,#334155);border-radius:999px;padding:2px 8px;display:inline-block;color:#94a3b8}
+    .row{display:flex;gap:8px;align-items:center;justify-content:space-between}
+    .btn{border:1px solid var(--border,#334155);background:#0b1020;color:#e5e7eb;padding:8px 10px;border-radius:10px;cursor:pointer}
+    .btn.primary{background:linear-gradient(90deg,#38bdf8,#22c55e);border:0}
+    .progress{height:10px;background:#0b1020;border:1px solid var(--border,#334155);border-radius:999px;overflow:hidden}
+    .bar{height:100%;width:0;background:linear-gradient(90deg,#38bdf8,#22c55e)}
+    .toolbar{display:flex;gap:8px;align-items:center;margin:8px 0;flex-wrap:wrap}
+    select,input[type="date"]{padding:8px 10px;border-radius:10px;border:1px solid var(--border,#334155);background:#0b1020;color:#e5e7eb}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1 id="title">進度追蹤</h1>
+      <p class="subtitle" id="subtitle"></p>
+    </div>
+
+    <nav>
+      <a href="../../index.html">首頁</a>
+      <a href="../goals/list.html">目標列表</a>
+      <a href="../goals/create.html">新增目標</a>
+      <a href="track.html" class="active">進度追蹤</a>
+    </nav>
+
+    <main>
+      <div class="toolbar">
+        <div class="progress" style="flex:1;min-width:220px"><div id="bar" class="bar"></div></div>
+        <span class="muted">完成度：<span id="pct">0%</span>｜已完成 <span id="doneCnt">0</span> / <span id="totalCnt">0</span> 項｜連續天數 <span id="streak">0</span></span>
+        <button class="btn" id="markToday">勾選今天以前</button>
+        <button class="btn" id="exportGoal">匯出此目標</button>
+      </div>
+
+      <div class="toolbar">
+        <label class="muted">區間：</label>
+        <input type="date" id="from" />
+        <span>→</span>
+        <input type="date" id="to" />
+        <select id="quickRange">
+          <option value="all">全部</option>
+          <option value="7">最近 7 天</option>
+          <option value="14">最近 14 天</option>
+          <option value="30">最近 30 天</option>
+        </select>
+      </div>
+
+      <div id="list" class="list"></div>
+      <p id="empty" class="muted" style="display:none">此目標目前沒有排程或落在所選區間以外。</p>
+    </main>
+  </div>
+
+  <script src="../../src/js/track.js"></script>
+</body>
+</html>
+
+<!-- =====================
+File: src/js/list.js
+===================== -->
+<script>
+(function(){
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+  const q = document.getElementById('q');
+  const exportAllBtn = document.getElementById('exportAll');
+  const clearAllBtn = document.getElementById('clearAll');
+
+  function readGoals(){
+    try{ return JSON.parse(localStorage.getItem('betterme:goals')||'[]'); }catch{ return []; }
+  }
+  function writeGoals(v){ localStorage.setItem('betterme:goals', JSON.stringify(v)); }
+
+  function progressOf(g){
+    const sched = g.schedule||[];
+    if(!sched.length) return {pct:0,done:0,total:0};
+    const done = sched.filter(t=>t.done).length;
+    const total = sched.length;
+    return {pct: Math.round(done*100/total), done, total};
+  }
+
+  function render(list){
+    grid.innerHTML='';
+    if(!list.length){ empty.style.display=''; return; }
+    empty.style.display='none';
+    list.forEach(g=>{
+      const p = progressOf(g);
+      const card = document.createElement('div');
+      card.className='card';
+      card.innerHTML = `
+        <div class="row">
+          <h3>${g.title}</h3>
+          <span class="badge">${g.type==='habit'?'習慣':'專案'}｜${g.category}</span>
+        </div>
+        <p class="muted">${g.description||''}</p>
+        <div class="muted">${g.startDate} → ${g.targetDate}</div>
+        <div class="progress"><div class="bar" style="width:${p.pct}%"></div></div>
+        <div class="row">
+          <span class="muted">完成 ${p.done}/${p.total}（${p.pct}%）</span>
+          <div>
+            <button class="btn" data-act="open" data-id="${g.id}">查看</button>
+            <button class="btn primary" data-act="track" data-id="${g.id}">追蹤</button>
+            <button class="btn" data-act="del" data-id="${g.id}">刪除</button>
+          </div>
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  function load(){ render(readGoals()); }
+
+  grid.addEventListener('click', (e)=>{
+    const act = e.target.getAttribute('data-act');
+    const id = e.target.getAttribute('data-id');
+    if(!act||!id) return;
+    const list = readGoals();
+    if(act==='open'){
+      window.location.href = `../progress/track.html?id=${id}`;
+    }
+    if(act==='track'){
+      window.location.href = `../progress/track.html?id=${id}`;
+    }
+    if(act==='del'){
+      if(confirm('確定刪除此目標？')){
+        writeGoals(list.filter(g=>g.id!==id));
+        load();
+      }
+    }
+  });
+
+  q.addEventListener('input', ()=>{
+    const kw = q.value.trim().toLowerCase();
+    const list = readGoals().filter(g=>{
+      const hay = [g.title,g.category,(g.tags||[]).join(',')].join(' ').toLowerCase();
+      return !kw || hay.includes(kw);
+    });
+    render(list);
+  });
+
+  exportAllBtn.addEventListener('click', ()=>{
+    const blob = new Blob([localStorage.getItem('betterme:goals')||'[]'], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href=url; a.download='betterme-goals.json'; a.click(); URL.revokeObjectURL(url);
+  });
+
+  clearAllBtn.addEventListener('click', ()=>{
+    if(confirm('確定清除所有目標？此動作無法復原。')){ writeGoals([]); load(); }
+  });
+
+  load();
+})();
+</script>
+
+<!-- =====================
+File: src/js/track.js
+===================== -->
+<script>
+(function(){
+  const title = document.getElementById('title');
+  const subtitle = document.getElementById('subtitle');
+  const listEl = document.getElementById('list');
+  const empty = document.getElementById('empty');
+  const bar = document.getElementById('bar');
+  const pctEl = document.getElementById('pct');
+  const doneCnt = document.getElementById('doneCnt');
+  const totalCnt = document.getElementById('totalCnt');
+  const streakEl = document.getElementById('streak');
+  const markTodayBtn = document.getElementById('markToday');
+  const exportGoalBtn = document.getElementById('exportGoal');
+
+  const from = document.getElementById('from');
+  const to = document.getElementById('to');
+  const quickRange = document.getElementById('quickRange');
+
+  function qs(name){ return new URLSearchParams(location.search).get(name); }
+  function readGoals(){ try{ return JSON.parse(localStorage.getItem('betterme:goals')||'[]'); }catch{ return []; } }
+  function writeGoals(v){ localStorage.setItem('betterme:goals', JSON.stringify(v)); }
+
+  const id = qs('id');
+  const store = readGoals();
+  let goal = store.find(g=>g.id===id);
+  if(!goal){
+    // fallback: 若沒帶 id，顯示第一個
+    goal = store[0];
+  }
+  if(!goal){
+    title.textContent = '進度追蹤';
+    subtitle.textContent = '尚無目標，請先建立。';
+    empty.style.display='';
+    return;
+  }
+
+  document.title = `進度追蹤 - ${goal.title}`;
+  title.textContent = goal.title;
+  subtitle.textContent = `${goal.startDate} → ${goal.targetDate}｜${goal.type==='habit'?'習慣':'專案'}｜${goal.category}`;
+
+  // 日期區間預設
+  function todayISO(){ return new Date().toISOString().slice(0,10); }
+  function addDays(dateStr, delta){ const d=new Date(dateStr); d.setDate(d.getDate()+delta); return d.toISOString().slice(0,10); }
+
+  from.value = goal.startDate;
+  to.value = goal.targetDate;
+  quickRange.addEventListener('change', ()=>{
+    const v = quickRange.value;
+    if(v==='all'){ from.value = goal.startDate; to.value = goal.targetDate; render(); return; }
+    to.value = todayISO();
+    from.value = addDays(to.value, -Number(v)+1);
+    render();
+  });
+
+  [from,to].forEach(el=>el.addEventListener('change', render));
+
+  function progressOf(tasks){
+    const total = tasks.length;
+    const done = tasks.filter(t=>t.done).length;
+    const pct = total? Math.round(done*100/total):0;
+    return {total,done,pct};
+  }
+
+  function calcStreak(tasks){
+    // 以排程順序（日期排序）從頭開始計算連續完成（休息日視為不中斷）
+    let s=0;
+    for(const t of tasks){
+      if(t.rest){ s++; continue; }
+      if(t.done){ s++; } else break;
+    }
+    return s;
+  }
+
+  function render(){
+    const all = (goal.schedule||[]).slice().sort((a,b)=>a.date.localeCompare(b.date));
+    const range = all.filter(t=>(!from.value||t.date>=from.value)&&(!to.value||t.date<=to.value));
+
+    listEl.innerHTML='';
+    if(!range.length){ empty.style.display=''; updateProgress(range); return; }
+    empty.style.display='none';
+
+    range.forEach((t,idx)=>{
+      const row = document.createElement('div');
+      row.className = 'task'+(t.done?' done':'');
+      const idc = `cb-${idx}`;
+      row.innerHTML = `
+        <input type="checkbox" id="${idc}" ${t.done?'checked':''} ${t.rest?'disabled':''} />
+        <div>
+          <div><strong>${t.date}</strong> — ${t.text}</div>
+          ${(t.amount?`<div class="muted">建議量：${t.amount}${t.unit||''}</div>`:'')}
+        </div>
+        <span class="badge">${t.rest?'REST':'TASK'}</span>
+      `;
+      listEl.appendChild(row);
+      const cb = row.querySelector('input');
+      cb.addEventListener('change', ()=>{
+        t.done = cb.checked;
+        row.classList.toggle('done', t.done);
+        // 回寫
+        const list = readGoals();
+        const idxG = list.findIndex(g=>g.id===goal.id);
+        if(idxG>=0){ list[idxG] = goal; writeGoals(list); }
+        updateProgress(range);
+      });
+    });
+
+    updateProgress(range);
+  }
+
+  function updateProgress(tasks){
+    const p = progressOf(tasks);
+    bar.style.width = p.pct+'%';
+    pctEl.textContent = p.pct+'%';
+    doneCnt.textContent = p.done; totalCnt.textContent = p.total;
+    // 連續天數以全部排程計算
+    streakEl.textContent = calcStreak((goal.schedule||[]).slice().sort((a,b)=>a.date.localeCompare(b.date)));
+  }
+
+  markTodayBtn.addEventListener('click', ()=>{
+    const today = todayISO();
+    (goal.schedule||[]).forEach(t=>{ if(!t.rest && t.date<=today){ t.done=true; } });
+    // 回寫
+    const list = readGoals();
+    const idxG = list.findIndex(g=>g.id===goal.id);
+    if(idxG>=0){ list[idxG]=goal; writeGoals(list); }
+    render();
+  });
+
+  exportGoalBtn.addEventListener('click', ()=>{
+    const blob = new Blob([JSON.stringify(goal,null,2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href=url; a.download=`goal-${goal.id}.json`; a.click(); URL.revokeObjectURL(url);
+  });
+
+  render();
+})();
+</script>
