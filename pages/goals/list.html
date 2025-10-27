@@ -6,32 +6,213 @@ File: pages/goals/list.html
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>目標列表 - Better Me</title>
+  <title>目標列表 - 更好的自己</title>
   <link rel="stylesheet" href="../../src/styles/main.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet" />
   <style>
-    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    @media(max-width:992px){.cards{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:640px){.cards{grid-template-columns:1fr}}
-    .card{border:1px solid var(--border,#334155);background:#0b1020;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px}
-    .muted{color:#94a3b8}
-    .badge{font-size:12px;border:1px solid var(--border,#334155);border-radius:999px;padding:2px 8px;display:inline-block;color:#94a3b8}
-    .row{display:flex;gap:8px;align-items:center;justify-content:space-between}
-    .btn{border:1px solid var(--border,#334155);background:#0b1020;color:#e5e7eb;padding:8px 10px;border-radius:10px;cursor:pointer}
-    .btn.primary{background:linear-gradient(90deg,#38bdf8,#22c55e);border:0}
-    .progress{height:10px;background:#0b1020;border:1px solid var(--border,#334155);border-radius:999px;overflow:hidden}
-    .bar{height:100%;width:0;background:linear-gradient(90deg,#38bdf8,#22c55e)}
-    .toolbar{display:flex;gap:8px;align-items:center;margin:8px 0}
-    .toolbar input{padding:8px 10px;border-radius:10px;border:1px solid var(--border,#334155);background:#0b1020;color:#e5e7eb}
+    .list-container {
+      max-width: 900px;
+      margin: 2rem auto;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .search-bar input {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-size: 1rem;
+    }
+
+    .search-bar button {
+      padding: 0.75rem 1.5rem;
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .search-bar button:hover {
+      background-color: var(--hover-color);
+      transform: translateY(-2px);
+    }
+
+    .goals-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .goal-card {
+      background-color: var(--nav-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .goal-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .goal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 1rem;
+    }
+
+    .goal-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin: 0;
+      color: var(--text-color);
+      flex: 1;
+    }
+
+    .goal-badge {
+      display: inline-block;
+      padding: 0.35rem 0.85rem;
+      background-color: var(--accent-color);
+      color: white;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+      margin-left: 1rem;
+    }
+
+    .goal-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      color: #94a3b8;
+      flex-wrap: wrap;
+    }
+
+    .goal-description {
+      color: #cbd5e1;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background-color: var(--border-color);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-color), #7577f5);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-bottom: 1.5rem;
+    }
+
+    .progress-percentage {
+      font-weight: 700;
+      color: var(--accent-color);
+    }
+
+    .goal-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .goal-actions button {
+      flex: 1;
+      padding: 0.65rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .btn-track {
+      background: linear-gradient(135deg, var(--accent-color), #7577f5);
+      color: white;
+    }
+
+    .btn-track:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-delete {
+      background-color: transparent;
+      border: 1px solid #ef4444;
+      color: #ef4444;
+    }
+
+    .btn-delete:hover {
+      background-color: #ef4444;
+      color: white;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #94a3b8;
+    }
+
+    .empty-state h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #cbd5e1;
+    }
+
+    .empty-state p {
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+
+    .empty-state a {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background-color: var(--accent-color);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .empty-state a:hover {
+      background-color: var(--hover-color);
+      transform: translateY(-2px);
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="page-header">
-      <h1>目標列表</h1>
-      <p class="subtitle">查看、搜尋與管理你的目標</p>
+      <h1>📋 目標列表</h1>
+      <p class="subtitle">查看並管理你的所有目標</p>
     </div>
 
     <nav>
@@ -41,17 +222,140 @@ File: pages/goals/list.html
       <a href="../progress/track.html">進度追蹤</a>
     </nav>
 
-    <main>
-      <div class="toolbar">
-        <input id="q" placeholder="搜尋：標題/類別/標籤"/>
-        <button class="btn" id="exportAll">匯出所有目標</button>
-        <button class="btn" id="clearAll">清除所有（小心）</button>
+    <main class="list-container">
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="搜尋目標名稱或類別...">
+        <button id="newGoalBtn">➕ 新增目標</button>
       </div>
-      <div id="grid" class="cards"></div>
-      <p id="empty" class="muted" style="display:none">尚無目標，請先前往「新增目標」。</p>
+
+      <div id="goalsList" class="goals-grid"></div>
+      <div id="emptyState" class="empty-state" style="display: none;">
+        <h3>😊 還沒有目標呢</h3>
+        <p>開始設定你的第一個目標，開啟蛻變之旅吧！</p>
+        <a href="create.html">建立第一個目標</a>
+      </div>
     </main>
   </div>
-  <script src="../../src/js/list.js"></script>
+
+  <script src="../../src/js/core.js"></script>
+  <script>
+    (function() {
+      const goalsList = document.getElementById('goalsList');
+      const emptyState = document.getElementById('emptyState');
+      const searchInput = document.getElementById('searchInput');
+      const newGoalBtn = document.getElementById('newGoalBtn');
+
+      newGoalBtn.addEventListener('click', () => {
+        window.location.href = 'create.html';
+      });
+
+      function renderGoals(goals) {
+        goalsList.innerHTML = '';
+
+        if (goals.length === 0) {
+          emptyState.style.display = 'block';
+          return;
+        }
+
+        emptyState.style.display = 'none';
+
+        goals.forEach(goal => {
+          const progress = window.goalManager.getGoalProgress(goal);
+          const daysRemaining = window.goalManager.getDaysRemaining(goal);
+
+          const card = document.createElement('div');
+          card.className = 'goal-card';
+          card.innerHTML = `
+            <div class="goal-header">
+              <h2 class="goal-title">${escapeHtml(goal.title)}</h2>
+              <span class="goal-badge">${getCategoryEmoji(goal.category)} ${goal.category}</span>
+            </div>
+
+            <div class="goal-meta">
+              <span>📅 ${goal.targetDate}</span>
+              <span>⏳ 剩餘 ${daysRemaining} 天</span>
+              <span>📊 ${progress.done}/${progress.total} 完成</span>
+            </div>
+
+            <p class="goal-description">${escapeHtml(goal.description)}</p>
+
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${progress.percentage}%"></div>
+            </div>
+
+            <div class="progress-info">
+              <span>進度</span>
+              <span class="progress-percentage">${progress.percentage}%</span>
+            </div>
+
+            <div class="goal-actions">
+              <button class="btn-track" data-action="track" data-id="${goal.id}">▶️ 追蹤進度</button>
+              <button class="btn-delete" data-action="delete" data-id="${goal.id}">🗑️ 刪除</button>
+            </div>
+          `;
+
+          goalsList.appendChild(card);
+        });
+
+        // 添加事件監聽
+        goalsList.addEventListener('click', (e) => {
+          const button = e.target.closest('button');
+          if (!button) return;
+
+          const action = button.getAttribute('data-action');
+          const id = button.getAttribute('data-id');
+
+          if (action === 'track') {
+            window.location.href = `../progress/track.html?id=${id}`;
+          } else if (action === 'delete') {
+            if (confirm('確定要刪除這個目標嗎？')) {
+              window.goalManager.deleteGoal(id);
+              load();
+            }
+          }
+        });
+      }
+
+      function load() {
+        const allGoals = window.goalManager.getAllGoals();
+        const searchTerm = searchInput.value.toLowerCase();
+
+        const filtered = allGoals.filter(goal => {
+          const hay = [goal.title, goal.category, goal.description].join(' ').toLowerCase();
+          return hay.includes(searchTerm);
+        });
+
+        renderGoals(filtered);
+      }
+
+      function getCategoryEmoji(category) {
+        const emojis = {
+          health: '💪',
+          learning: '📚',
+          career: '🎯',
+          relationship: '💝',
+          finance: '💰',
+          hobby: '🎨',
+          other: '✨'
+        };
+        return emojis[category] || '✨';
+      }
+
+      function escapeHtml(text) {
+        const map = {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, m => map[m]);
+      }
+
+      searchInput.addEventListener('input', load);
+      load();
+    })();
+  </script>
 </body>
 </html>
 

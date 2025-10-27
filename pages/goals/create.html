@@ -3,14 +3,134 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>設定新目標 - Better Me</title>
+  <title>新增目標 - 更好的自己</title>
   <link rel="stylesheet" href="../../src/styles/main.css"/>
+  <style>
+    .simple-form {
+      max-width: 600px;
+      margin: 2rem auto;
+      background-color: var(--nav-bg);
+      padding: 2rem;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+    }
+
+    .form-field {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-field label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--accent-color);
+      font-size: 0.95rem;
+    }
+
+    .form-field input,
+    .form-field textarea,
+    .form-field select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    .form-field input:focus,
+    .form-field textarea:focus,
+    .form-field select:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+    }
+
+    .form-field textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .form-hint {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-top: 0.3rem;
+      font-style: italic;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 0.85rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-color), #7577f5);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+
+    .success-message {
+      display: none;
+      background-color: #10b981;
+      color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .error-message {
+      display: none;
+      background-color: #ef4444;
+      color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <div class="page-header">
-      <h1>設定新目標</h1>
-      <p class="subtitle">開始你的成長之旅</p>
+      <h1>✨ 設定新目標</h1>
+      <p class="subtitle">開始你的蛻變之旅</p>
     </div>
 
     <nav>
@@ -21,144 +141,201 @@
     </nav>
 
     <main>
-      <form id="goalForm" class="form-container">
-        <!-- 類型 & 範本 -->
+      <form id="goalForm" class="simple-form">
+        <div id="successMsg" class="success-message"></div>
+        <div id="errorMsg" class="error-message"></div>
+
+        <!-- 目標名稱 -->
+        <div class="form-field">
+          <label for="goalTitle">📌 目標名稱 *</label>
+          <input 
+            type="text" 
+            id="goalTitle" 
+            name="goalTitle" 
+            placeholder="例如：每天喝水 2000ml"
+            required
+          >
+          <div class="form-hint">簡潔明確的目標名稱</div>
+        </div>
+
+        <!-- 類別 -->
+        <div class="form-field">
+          <label for="goalCategory">🏷️ 類別 *</label>
+          <select id="goalCategory" name="goalCategory" required>
+            <option value="">-- 選擇類別 --</option>
+            <option value="health">💪 健康運動</option>
+            <option value="learning">📚 學習成長</option>
+            <option value="career">🎯 工作職涯</option>
+            <option value="relationship">💝 人際關係</option>
+            <option value="finance">💰 理財投資</option>
+            <option value="hobby">🎨 興趣愛好</option>
+            <option value="other">✨ 其他</option>
+          </select>
+        </div>
+
+        <!-- 描述 -->
+        <div class="form-field">
+          <label for="goalDescription">📝 為什麼要做這個目標？ *</label>
+          <textarea 
+            id="goalDescription" 
+            name="goalDescription"
+            placeholder="寫下你想達成這個目標的原因和方法..."
+            required
+          ></textarea>
+          <div class="form-hint">幫助你保持動力的關鍵</div>
+        </div>
+
+        <!-- 目標時間和數值 -->
         <div class="form-row">
-          <div class="form-group">
-            <label for="goalType">目標型態</label>
-            <select id="goalType" name="goalType" required>
-              <option value="habit" selected>習慣（週期性）</option>
-              <option value="project">專案（一次性）</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="goalCategory">目標類別</label>
-            <select id="goalCategory" name="goalCategory" required>
-              <option value="">選擇類別</option>
-              <option value="health">健康</option>
-              <option value="learning">學習</option>
-              <option value="career">職涯</option>
-              <option value="relationship">人際關係</option>
-              <option value="finance">理財</option>
-              <option value="other">其他</option>
-            </select>
-            <div class="hint">
-              <button type="button" class="button-secondary" id="applyTemplate">套用常用範本</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 基本資料 -->
-        <div class="form-group">
-          <label for="goalTitle">目標名稱</label>
-          <input type="text" id="goalTitle" name="goalTitle" placeholder="例如：每天喝水 2000 ml / 每天閱讀 20 分鐘" required>
-        </div>
-
-        <div class="form-group">
-          <label for="goalDescription">目標描述（Why/How）</label>
-          <textarea id="goalDescription" name="goalDescription" rows="4"
-            placeholder="為什麼要做？要如何執行？遇到困難時的替代方案是什麼？" required></textarea>
-        </div>
-
-        <!-- SMART 可量化 -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="quantValue">可量化目標（數值）</label>
-            <input type="number" id="quantValue" min="0" step="1" placeholder="例如 2000 或 20">
-          </div>
-          <div class="form-group">
-            <label for="quantUnit">單位</label>
-            <input type="text" id="quantUnit" placeholder="例如：ml / 分鐘 / 次 / 頁">
-          </div>
-        </div>
-        <p class="hint" id="smartHint"></p>
-
-        <!-- 日期 -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="startDate">開始日期</label>
-            <input type="date" id="startDate" name="startDate" required>
-          </div>
-          <div class="form-group">
-            <label for="targetDate">目標日期</label>
+          <div class="form-field">
+            <label for="targetDate">🗓️ 目標完成日期 *</label>
             <input type="date" id="targetDate" name="targetDate" required>
-            <p class="hint"><span id="daysLeftText"></span></p>
+            <div class="form-hint" id="daysHint"></div>
+          </div>
+
+          <div class="form-field">
+            <label for="quantValue">📊 目標數值（可選）</label>
+            <input 
+              type="number" 
+              id="quantValue" 
+              name="quantValue" 
+              placeholder="例如：2000"
+              min="0"
+            >
           </div>
         </div>
 
-        <!-- 習慣排程（僅 habit 顯示） -->
-        <div id="habitBlock" class="card">
-          <h3>習慣排程</h3>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="freqType">頻率類型</label>
-              <select id="freqType">
-                <option value="perday" selected>每天固定量</option>
-                <option value="perweek">每週幾次</option>
-              </select>
-            </div>
-            <div class="form-group" id="freqValueWrap">
-              <label for="freqValue">數值</label>
-              <input type="number" id="freqValue" min="1" value="1" />
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="daytime">偏好時段</label>
-              <select id="daytime">
-                <option value="morning">早上</option>
-                <option value="evening">晚上</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="restPerWeek">每週休息日</label>
-              <select id="restPerWeek">
-                <option value="0">0</option>
-                <option value="1" selected>1</option>
-                <option value="2">2</option>
-              </select>
-            </div>
-          </div>
+        <!-- 單位 -->
+        <div class="form-field">
+          <label for="quantUnit">📏 單位（可選）</label>
+          <input 
+            type="text" 
+            id="quantUnit" 
+            name="quantUnit" 
+            placeholder="例如：ml、分鐘、次、頁"
+          >
+          <div class="form-hint">搭配數值使用，例如「2000 ml」、「20 分鐘」</div>
         </div>
 
-        <!-- 里程碑 -->
-        <div class="form-group">
-          <label for="milestones">階段性目標</label>
-          <div id="milestoneContainer">
-            <div class="milestone-item">
-              <input type="text" name="milestones[]" placeholder="新增一個里程碑…">
-              <input type="number" name="weights[]" min="0" max="100" placeholder="權重（選填 %）" class="milestone-weight">
-              <button type="button" class="button-secondary add-milestone">+</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 其他 -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="tags">標籤（以逗號分隔）</label>
-            <input type="text" id="tags" placeholder="例如：飲食, 早晨, 健康">
-          </div>
-          <div class="form-group">
-            <label for="visibility">可見性</label>
-            <select id="visibility">
-              <option value="private" selected>私人</option>
-              <option value="public">公開（未來可分享）</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="button-primary">建立目標</button>
-          <button type="reset" class="button-secondary" id="resetBtn">重設</button>
+        <!-- 按鈕 -->
+        <div class="button-group">
+          <button type="submit" class="btn btn-primary">✅ 建立目標</button>
+          <button type="reset" class="btn btn-secondary">🔄 重設</button>
         </div>
       </form>
     </main>
   </div>
 
-  <!-- 可選：未來要上雲可打開 GUN（JS 內已留 hook） -->
-  <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
-  <script src="../../src/js/goals.js"></script>
+  <script src="../../src/js/core.js"></script>
+  <script>
+    (function() {
+      const form = document.getElementById('goalForm');
+      const titleInput = document.getElementById('goalTitle');
+      const categorySelect = document.getElementById('goalCategory');
+      const descriptionTextarea = document.getElementById('goalDescription');
+      const targetDateInput = document.getElementById('targetDate');
+      const quantValueInput = document.getElementById('quantValue');
+      const quantUnitInput = document.getElementById('quantUnit');
+      const successMsg = document.getElementById('successMsg');
+      const errorMsg = document.getElementById('errorMsg');
+      const daysHint = document.getElementById('daysHint');
+
+      // 計算剩餘天數
+      targetDateInput.addEventListener('change', () => {
+        const target = new Date(targetDateInput.value);
+        const today = new Date();
+        const days = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+
+        if (days < 0) {
+          daysHint.textContent = '⚠️ 日期不能是過去';
+          daysHint.style.color = '#ef4444';
+        } else if (days === 0) {
+          daysHint.textContent = '⏰ 今天截止';
+          daysHint.style.color = '#f59e0b';
+        } else {
+          daysHint.textContent = `⏳ 剩餘 ${days} 天`;
+          daysHint.style.color = '#10b981';
+        }
+      });
+
+      // 提交表單
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // 基本驗證
+        if (!titleInput.value.trim()) {
+          showError('請輸入目標名稱');
+          return;
+        }
+
+        if (!categorySelect.value) {
+          showError('請選擇目標類別');
+          return;
+        }
+
+        if (!descriptionTextarea.value.trim()) {
+          showError('請描述你的目標');
+          return;
+        }
+
+        if (!targetDateInput.value) {
+          showError('請選擇目標完成日期');
+          return;
+        }
+
+        const targetDate = new Date(targetDateInput.value);
+        if (targetDate < new Date()) {
+          showError('目標日期不能是過去');
+          return;
+        }
+
+        try {
+          // 新增目標
+          const goalData = {
+            title: titleInput.value.trim(),
+            category: categorySelect.value,
+            description: descriptionTextarea.value.trim(),
+            targetDate: targetDateInput.value,
+            quantValue: quantValueInput.value ? parseInt(quantValueInput.value) : 0,
+            quantUnit: quantUnitInput.value.trim()
+          };
+
+          const newGoal = window.goalManager.addGoal(goalData);
+          
+          // 生成排程
+          const schedule = window.goalManager.generateHabitSchedule(newGoal);
+          window.goalManager.updateGoal(newGoal.id, { schedule });
+
+          // 成功提示
+          showSuccess('✅ 目標建立成功！');
+
+          // 1.5秒後跳轉到進度追蹤頁面
+          setTimeout(() => {
+            window.location.href = `../progress/track.html?id=${newGoal.id}`;
+          }, 1500);
+
+        } catch (err) {
+          console.error(err);
+          showError('發生錯誤，請重試');
+        }
+      });
+
+      function showSuccess(msg) {
+        successMsg.textContent = msg;
+        successMsg.style.display = 'block';
+        errorMsg.style.display = 'none';
+      }
+
+      function showError(msg) {
+        errorMsg.textContent = msg;
+        errorMsg.style.display = 'block';
+        successMsg.style.display = 'none';
+      }
+
+      // 初始化日期
+      targetDateInput.valueAsDate = new Date();
+      targetDateInput.dispatchEvent(new Event('change'));
+    })();
+  </script>
 </body>
 </html>
